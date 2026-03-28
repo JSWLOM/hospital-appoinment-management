@@ -1,0 +1,317 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>HospitaSync Dashboard</title>
+    <link rel="stylesheet" href="css/styles.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+</head>
+<body>
+    <div class="dashboard-layout">
+        <!-- Sidebar -->
+        <aside class="sidebar">
+            <div class="sidebar-header">
+                <h3><i class="fa-solid fa-notes-medical"></i> HospitaSync</h3>
+            </div>
+            <ul class="nav-links">
+                <li><a href="#" class="nav-item active" data-target="dashboard"><i class="fa-solid fa-chart-pie"></i> Dashboard</a></li>
+                <li id="nav-doctors" class="hidden"><a href="#" class="nav-item" data-target="doctors"><i class="fa-solid fa-user-doctor"></i> Doctors</a></li>
+                <li><a href="#" class="nav-item" data-target="patients"><i class="fa-solid fa-bed-pulse"></i> Patients</a></li>
+                <li><a href="#" class="nav-item" data-target="appointments"><i class="fa-regular fa-calendar-check"></i> Appointments</a></li>
+                <li><a href="#" class="nav-item" data-target="billing"><i class="fa-solid fa-file-invoice-dollar"></i> Billing</a></li>
+            </ul>
+            <div class="sidebar-footer">
+                <button id="logoutBtn" class="btn btn-danger" style="width: 100%;"><i class="fa-solid fa-right-from-bracket"></i> Logout</button>
+            </div>
+        </aside>
+
+        <!-- Main Content -->
+        <main class="main-content">
+            <header class="topbar">
+                <h2 id="pageTitle">Dashboard</h2>
+                <div class="user-profile">
+                    <span id="userNameDisplay">Admin User</span>
+                    <div class="avatar" id="userAvatar">A</div>
+                </div>
+            </header>
+
+            <div class="content-wrapper">
+                
+                <!-- Dashboard Section -->
+                <section id="dashboard" class="view-section">
+                    <div class="stats-grid">
+                        <div class="stat-card">
+                            <div class="stat-icon primary"><i class="fa-solid fa-users"></i></div>
+                            <div class="stat-details">
+                                <h4>Total Patients</h4>
+                                <h2 id="stat-patients">...</h2>
+                            </div>
+                        </div>
+                        <div class="stat-card">
+                            <div class="stat-icon success"><i class="fa-solid fa-user-doctor"></i></div>
+                            <div class="stat-details">
+                                <h4>Total Doctors</h4>
+                                <h2 id="stat-doctors">...</h2>
+                            </div>
+                        </div>
+                        <div class="stat-card">
+                            <div class="stat-icon warning"><i class="fa-solid fa-calendar-day"></i></div>
+                            <div class="stat-details">
+                                <h4>Appointments</h4>
+                                <h2 id="stat-appointments">...</h2>
+                            </div>
+                        </div>
+                        <div class="stat-card">
+                            <div class="stat-icon danger"><i class="fa-solid fa-wallet"></i></div>
+                            <div class="stat-details">
+                                <h4>Total Revenue</h4>
+                                <h2 id="stat-revenue">...</h2>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="panel">
+                        <div class="panel-header">
+                            <h3>Recent Patients</h3>
+                            <button class="btn-sm btn-primary" onclick="switchTab('patients')">View All</button>
+                        </div>
+                        <div class="panel-body">
+                            <table id="recentPatientsTable">
+                                <thead>
+                                    <tr>
+                                        <th>ID</th>
+                                        <th>Name</th>
+                                        <th>Age</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <!-- Populated by JS -->
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </section>
+
+                <!-- Doctors Section -->
+                <section id="doctors" class="view-section hidden">
+                    <div class="panel">
+                        <div class="panel-header">
+                            <h3>Doctor Management</h3>
+                            <button class="btn btn-primary" style="width: auto;" onclick="openModal('doctorModal')"><i class="fa-solid fa-plus"></i> Add Doctor</button>
+                        </div>
+                        <div class="panel-body">
+                            <table id="doctorsTable">
+                                <thead>
+                                    <tr>
+                                        <th>ID</th>
+                                        <th>Name</th>
+                                        <th>Specialty</th>
+                                        <th>Phone</th>
+                                        <th>Actions</th>
+                                    </tr>
+                                </thead>
+                                <tbody></tbody>
+                            </table>
+                        </div>
+                    </div>
+                </section>
+
+                <!-- Patients Section -->
+                <section id="patients" class="view-section hidden">
+                    <div class="panel">
+                        <div class="panel-header">
+                            <h3>Patient Data</h3>
+                            <button class="btn btn-primary" style="width: auto;" onclick="openModal('patientModal')"><i class="fa-solid fa-plus"></i> Add Patient</button>
+                        </div>
+                        <div class="panel-body">
+                            <table id="patientsTable">
+                                <thead>
+                                    <tr>
+                                        <th>ID</th>
+                                        <th>Name</th>
+                                        <th>Age / Gender</th>
+                                        <th>Phone</th>
+                                        <th>Actions</th>
+                                    </tr>
+                                </thead>
+                                <tbody></tbody>
+                            </table>
+                        </div>
+                    </div>
+                </section>
+
+                <!-- Appointments Section -->
+                <section id="appointments" class="view-section hidden">
+                    <div class="panel">
+                        <div class="panel-header">
+                            <h3>Appointments Directory</h3>
+                            <button class="btn btn-primary" style="width: auto;" onclick="openModal('appointmentModal')"><i class="fa-solid fa-plus"></i> Book Appointment</button>
+                        </div>
+                        <div class="panel-body">
+                            <table id="appointmentsTable">
+                                <thead>
+                                    <tr>
+                                        <th>ID</th>
+                                        <th>Patient</th>
+                                        <th>Doctor</th>
+                                        <th>Date & Time</th>
+                                        <th>Status</th>
+                                        <th>Actions</th>
+                                    </tr>
+                                </thead>
+                                <tbody></tbody>
+                            </table>
+                        </div>
+                    </div>
+                </section>
+
+                <!-- Billing Section -->
+                <section id="billing" class="view-section hidden">
+                    <div class="panel">
+                        <div class="panel-header">
+                            <h3>Billing & Invoices</h3>
+                            <button class="btn btn-primary" style="width: auto;" onclick="openModal('billingModal')"><i class="fa-solid fa-plus"></i> Generate Bill</button>
+                        </div>
+                        <div class="panel-body">
+                            <table id="billingTable">
+                                <thead>
+                                    <tr>
+                                        <th>Bill #</th>
+                                        <th>Appointment Info</th>
+                                        <th>Amount</th>
+                                        <th>Status</th>
+                                        <th>Actions</th>
+                                    </tr>
+                                </thead>
+                                <tbody></tbody>
+                            </table>
+                        </div>
+                    </div>
+                </section>
+
+            </div>
+        </main>
+    </div>
+
+    <!-- Modals -->
+    <div class="modal-overlay" id="doctorModal">
+        <div class="modal">
+            <div class="modal-header">
+                <h3>Add New Doctor</h3>
+                <button class="close-btn" onclick="closeModal('doctorModal')"><i class="fa-solid fa-xmark"></i></button>
+            </div>
+            <div class="modal-body">
+                <form id="formAddDoctor">
+                    <div class="form-group">
+                        <label>Name</label>
+                        <input type="text" id="drName" class="form-control" required placeholder="Dr. John Doe">
+                    </div>
+                    <div class="form-group">
+                        <label>Specialty</label>
+                        <input type="text" id="drSpecialty" class="form-control" required placeholder="Cardiology">
+                    </div>
+                    <div class="form-group">
+                        <label>Phone</label>
+                        <input type="text" id="drPhone" class="form-control" placeholder="(123) 456-7890">
+                    </div>
+                    <button type="submit" class="btn">Save Doctor</button>
+                </form>
+            </div>
+        </div>
+    </div>
+
+    <div class="modal-overlay" id="patientModal">
+        <div class="modal">
+            <div class="modal-header">
+                <h3>Add New Patient</h3>
+                <button class="close-btn" onclick="closeModal('patientModal')"><i class="fa-solid fa-xmark"></i></button>
+            </div>
+            <div class="modal-body">
+                <form id="formAddPatient">
+                    <div class="form-group">
+                        <label>Full Name</label>
+                        <input type="text" id="ptName" class="form-control" required placeholder="Jane Smith">
+                    </div>
+                    <div style="display: flex; gap: 1rem;">
+                        <div class="form-group" style="flex: 1;">
+                            <label>Age</label>
+                            <input type="number" id="ptAge" class="form-control" required placeholder="45">
+                        </div>
+                        <div class="form-group" style="flex: 1;">
+                            <label>Gender</label>
+                            <select id="ptGender" class="form-control">
+                                <option value="Male">Male</option>
+                                <option value="Female">Female</option>
+                                <option value="Other">Other</option>
+                            </select>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label>Phone</label>
+                        <input type="text" id="ptPhone" class="form-control" placeholder="(123) 456-7890">
+                    </div>
+                    <button type="submit" class="btn">Save Patient</button>
+                </form>
+            </div>
+        </div>
+    </div>
+    
+    <div class="modal-overlay" id="appointmentModal">
+        <div class="modal">
+            <div class="modal-header">
+                <h3>Book Appointment</h3>
+                <button class="close-btn" onclick="closeModal('appointmentModal')"><i class="fa-solid fa-xmark"></i></button>
+            </div>
+            <div class="modal-body">
+                <form id="formBookApt">
+                    <div class="form-group">
+                        <label>Select Patient</label>
+                        <select id="aptPatient" class="form-control" required></select>
+                    </div>
+                    <div class="form-group">
+                        <label>Select Doctor</label>
+                        <select id="aptDoctor" class="form-control" required></select>
+                    </div>
+                    <div style="display: flex; gap: 1rem;">
+                        <div class="form-group" style="flex: 1;">
+                            <label>Date</label>
+                            <input type="date" id="aptDate" class="form-control" required>
+                        </div>
+                        <div class="form-group" style="flex: 1;">
+                            <label>Time</label>
+                            <input type="time" id="aptTime" class="form-control" required>
+                        </div>
+                    </div>
+                    <button type="submit" class="btn">Book Now</button>
+                </form>
+            </div>
+        </div>
+    </div>
+    
+    <div class="modal-overlay" id="billingModal">
+        <div class="modal">
+            <div class="modal-header">
+                <h3>Generate Bill</h3>
+                <button class="close-btn" onclick="closeModal('billingModal')"><i class="fa-solid fa-xmark"></i></button>
+            </div>
+            <div class="modal-body">
+                <form id="formGenBill">
+                    <div class="form-group">
+                        <label>Select Appointment</label>
+                        <select id="billApt" class="form-control" required></select>
+                    </div>
+                    <div class="form-group">
+                        <label>Amount ($)</label>
+                        <input type="number" id="billAmount" step="0.01" class="form-control" required placeholder="150.00">
+                    </div>
+                    <button type="submit" class="btn">Generate Bill</button>
+                </form>
+            </div>
+        </div>
+    </div>
+
+    <!-- Javascript -->
+    <script src="js/main.js"></script>
+</body>
+</html>

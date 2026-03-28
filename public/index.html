@@ -1,0 +1,125 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Hospital Appointment System | Login</title>
+    <link rel="stylesheet" href="css/styles.css">
+    <!-- Font Awesome for Icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+</head>
+<body class="hospital-theme">
+    <nav class="hospital-navbar">
+        <div class="logo">
+            <i class="fa-solid fa-notes-medical"></i>
+            <span>Hospital Appoinment Management</span>
+        </div>
+        <div class="nav-links-public">
+            <a href="#">Home</a>
+            <a href="#">Our Doctors</a>
+            <a href="#">Services</a>
+            <a href="#">Contact</a>
+        </div>
+    </nav>
+
+    <div class="split-layout">
+        <div class="hero-section">
+            <div class="hero-content">
+                <h1>Providing Quality Healthcare Services</h1>
+                <p>Welcome to our online appointment portal. Manage your appointments, vital health data, and expert consultations securely and easily.</p>
+                <div class="hero-stats">
+                    <div class="hero-stat">
+                        <i class="fa-solid fa-user-doctor"></i>
+                        <span>50+ Specialists</span>
+                    </div>
+                    <div class="hero-stat">
+                        <i class="fa-solid fa-truck-medical"></i>
+                        <span>24/7 Emergency</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <div class="auth-section">
+            <div class="auth-card">
+                <div class="auth-header">
+                    <h2><i class="fa-solid fa-user-lock"></i> Staff Login</h2>
+                    <p>Enter your credentials to access the management system</p>
+                    <div style="margin-top:10px; font-size: 0.85em; color: var(--text-muted); background: #f8f9fa; padding: 10px; border-radius: 8px;">
+                        <strong>Quick Access Info:</strong><br>
+                        Admin<br>
+                        Reception
+                    </div>
+                </div>
+                <div id="loginError" class="msg-box error"></div>
+                <form id="loginForm">
+                    <div class="form-group">
+                        <label for="username">Username</label>
+                        <input type="text" id="username" class="form-control" placeholder="admin or reception" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="password">Password</label>
+                        <input type="password" id="password" class="form-control" placeholder="••••••••" required>
+                    </div>
+                    <button type="submit" class="btn btn-hospital">Login Securely <i class="fa-solid fa-arrow-right-to-bracket"></i></button>
+                </form>
+            </div>
+        </div>
+    </div>
+
+    <footer class="creator-footer">
+        <div class="creator-box">
+            <p>Made by <strong>Om Jaiswal</strong> | Manipal University Jaipur</p>
+            <div class="social-links">
+                <a href="https://www.linkedin.com/in/om-jaiswal-1b315126b/" target="_blank" title="LinkedIn"><i class="fa-brands fa-linkedin"></i></a>
+                <a href="https://github.com/JSWLOM" target="_blank" title="GitHub"><i class="fa-brands fa-github"></i></a>
+            </div>
+        </div>
+    </footer>
+
+    <script>
+        document.getElementById('loginForm').addEventListener('submit', async (e) => {
+            e.preventDefault();
+            const user = document.getElementById('username').value;
+            const pass = document.getElementById('password').value;
+            const errBox = document.getElementById('loginError');
+            const btn = document.querySelector('.btn');
+            
+            errBox.style.display = 'none';
+            btn.innerHTML = '<i class="fa-solid fa-circle-notch fa-spin"></i> Authenticating...';
+            btn.disabled = true;
+
+            try {
+                const res = await fetch('/api/auth/login', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ username: user, password: pass })
+                });
+
+                const data = await res.json();
+                
+                if (res.ok) {
+                    localStorage.setItem('token', data.token);
+                    localStorage.setItem('user', JSON.stringify(data.user));
+                    window.location.href = '/dashboard.html';
+                } else {
+                    errBox.textContent = data.error || 'Login failed';
+                    errBox.style.display = 'block';
+                    btn.innerHTML = 'Login Securely <i class="fa-solid fa-arrow-right-to-bracket"></i>';
+                    btn.disabled = false;
+                }
+            } catch (error) {
+                errBox.textContent = 'Server error. Please try again.';
+                errBox.style.display = 'block';
+                btn.innerHTML = 'Login Securely <i class="fa-solid fa-arrow-right-to-bracket"></i>';
+                btn.disabled = false;
+            }
+        });
+
+        // Redirect if already logged in
+        if (localStorage.getItem('token')) {
+            window.location.href = '/dashboard.html';
+        }
+    </script>
+</body>
+</html>
