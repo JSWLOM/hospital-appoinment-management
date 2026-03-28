@@ -40,7 +40,7 @@ Make sure you have [Node.js](https://nodejs.org/) installed on your machine.
    npm start
    ```
 4. **Access the application**:
-   Open a browser and navigate to `http://localhost:3000`
+   Open a browser and navigate to 'https://hospital-appoinment-management.onrender.com'
 
 ## 🔐 Default Credentials
 When the database is automatically generated on the first run, it seeds the following users:
